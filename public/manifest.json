@@ -1,7 +1,17 @@
 {
   "manifest_version": 3,
-
   "name": "Harmonized System Extension",
   "description": "Search and display HS Code information",
   "version": "1.0",
+  "permissions": ["contextMenus", "activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["js/contentScript.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "js/background.js"
+  }
 }
