@@ -1,5 +1,4 @@
 import {findCodeWithPrimaryMatch} from '../util/searchUtil';
-// const {findCodeWithPrimaryMatch} = require('../util');
 
 // Copyright 2023 Google LLC
 //
