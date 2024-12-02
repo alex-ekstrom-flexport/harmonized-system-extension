@@ -1,0 +1,7 @@
+{
+  "manifest_version": 3,
+
+  "name": "Harmonized System Extension",
+  "description": "Search and display HS Code information",
+  "version": "1.0",
+}
