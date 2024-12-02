@@ -1,3 +1,6 @@
+import {findCodeWithPrimaryMatch} from '../util/searchUtil';
+// const {findCodeWithPrimaryMatch} = require('../util');
+
 // Copyright 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +30,7 @@ function genericOnClick(info) {
     default:
       // Standard context menu item function
       console.log('Standard context menu item clicked.')
+      console.log(findCodeWithPrimaryMatch('0102.29.20'))
   }
 }
 chrome.runtime.onInstalled.addListener(function () {
