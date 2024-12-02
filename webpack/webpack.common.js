@@ -1,17 +1,17 @@
 const webpack = require('webpack')
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
+const HTMLPlugin = require('html-webpack-plugin')
 const srcDir = path.join(__dirname, '..', 'src')
 
 module.exports = {
   entry: {
-    contentScript: './src/content-script/index.tsx',
     background: './src/background/index.js',
-    popup: './src/popup/index.tsx',
+    sidepanel: './src/sidepanel/index.tsx',
   },
   output: {
-    path: path.join(__dirname, '../dist/js'),
-    filename: '[name].js',
+    path: path.join(__dirname, '../dist'),
+    filename: 'js/[name].js',
   },
   optimization: {
     splitChunks: {
@@ -27,14 +27,18 @@ module.exports = {
         test: /\.tsx?$/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'ts-loader',
             options: {
-              presets: ['@babel/preset-env', '@babel/preset-react'],
+              compilerOptions: { noEmit: false },
             },
           },
-          'ts-loader',
         ],
         exclude: /node_modules/,
+      },
+      {
+        exclude: /node_modules/,
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -43,8 +47,25 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: '.', to: '../', context: 'public' }],
-      options: {},
+      patterns: [
+        { from: './manifest.json', to: '.', context: 'public' },
+        {
+          from: '.',
+          to: path.resolve('dist', 'assets', '[name][ext]'),
+          context: 'assets',
+        },
+      ],
     }),
+    ...getHtmlPlugins(['sidepanel']),
   ],
+}
+function getHtmlPlugins(chunks) {
+  return chunks.map(
+    (chunk) =>
+      new HTMLPlugin({
+        title: 'HS Code Lookup Side Panel',
+        filename: `./html/${chunk}.html`,
+        chunks: [chunk],
+      })
+  )
 }
