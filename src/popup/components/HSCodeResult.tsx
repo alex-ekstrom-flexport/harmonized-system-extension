@@ -1,22 +1,25 @@
 import React from "react";
-import "./styles.css";
+import "./styles/HSCodeResult.css";
 
-const Result = ({
-                  heading,
-                  subheading,
-                  description,
-                  generalRates,
-                  specialRates,
-                }) => {
-  return (
-    <div className="result-card">
-      <div className="result-heading">Heading</div>
-      <div className="result-subheading">Suffix</div>
-      <div className="result-description">Description</div>
-      <div className="rate">general rate </div>
-      <div className="rate">special Rate</div>
-    </div>
-  );
-};
+interface ResultProps {
+  heading: string;
+  suffix: string;
+  description: string;
+  hsRates: string | number;
+}
+
+const Result:React.FC<ResultProps> = ({
+  heading,
+  suffix,
+  description,
+  hsRates,
+}) => (
+  <div className="result-card">
+    <div className="result-heading">Heading</div>
+    <div className="result-subheading">Suffix</div>
+    <div className="result-description">Description</div>
+    <div className="rate">HS rates</div>
+  </div>
+)
 
 export default Result;
