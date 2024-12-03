@@ -1,17 +1,26 @@
 {
   "manifest_version": 3,
-  "name": "Harmonized System Extension",
+  "name": "HS Code Lookup",
   "description": "Search and display HS Code information",
   "version": "1.0",
-  "permissions": ["contextMenus", "activeTab"],
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["js/contentScript.js"],
-      "run_at": "document_end"
+  "permissions": ["contextMenus", "storage", "sidePanel"],
+  "action": {
+    "default_popup": "html/sidepanel.html",
+    "default_icon": {
+      "16": "assets/customs_icon_16.png",
+      "48": "assets/customs_icon_48.png",
+      "128": "assets/customs_icon_128.png"
     }
-  ],
+  },
   "background": {
     "service_worker": "js/background.js"
+  },
+  "side_panel": {
+    "default_path": "html/sidepanel.html"
+  },
+  "icons": {
+    "16": "assets/customs_icon_16.png",
+    "48": "assets/customs_icon_48.png",
+    "128": "assets/customs_icon_128.png"
   }
 }
