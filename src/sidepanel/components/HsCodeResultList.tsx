@@ -3,8 +3,8 @@ import React from 'react'
 import { createUseStyles } from 'react-jss'
 import { Stack, Typography } from '@mui/material'
 
-import HSCodeResult from './HSCodeResult'
 import type { HsCodeSearchResult } from '../../util/searchUtil'
+import HSCodeResultCard from './HSCodeResultCard'
 
 type Props = Readonly<{
   hsCodeData: HsCodeSearchResult,
@@ -21,7 +21,7 @@ const HsCodeResultList: React.FC<Props> = ({hsCodeData}: Props) => {
         {primaryResult != null && (
         <Stack>
             <Typography className={styles.label}>Primary Match</Typography>
-            <HSCodeResult heading={primaryResult.htsno} description={primaryResult.description} suffix='' hsRates=''/>
+            <HSCodeResultCard htsno={primaryResult.htsno} description={primaryResult.description} general={primaryResult.general} special={primaryResult.special} other={primaryResult.other} />
         </Stack>
         )}
         {otherResults.length > 0 && (
@@ -29,7 +29,7 @@ const HsCodeResultList: React.FC<Props> = ({hsCodeData}: Props) => {
             <Typography className={styles.label}>{primaryResult != null ? "Similar Results" : "Results"}</Typography>
             <Stack>
               {otherResults.map(result => (
-                  <HSCodeResult heading={result.htsno} description={result.description} suffix='' hsRates=''/>
+                  <HSCodeResultCard htsno={result.htsno} description={result.description} general={result.general} special={result.special} other={result.other}/>
               ))}
             </Stack>
           </Stack>
