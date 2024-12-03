@@ -53,7 +53,7 @@ const Sidepanel: React.FC = () => {
         chrome.storage.onChanged.removeListener(handleStorageChange)
       }
     })()
-  }, [selectedText])
+  }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -71,6 +71,7 @@ const Sidepanel: React.FC = () => {
   } else {
     return (
       <div className="Sidepanel">
+        <p>{responseText}</p>
         <SearchBar searchTerm={selectedText ?? ''} onChange={setSelectedText} />
         <HsCodeResultList hsCodeData={searchData} />
       </div>
