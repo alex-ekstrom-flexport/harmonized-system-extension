@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { createUseStyles } from 'react-jss'
+import { Stack, Typography } from '@mui/material'
 
 import HSCodeResult from './HSCodeResult'
 import type { HsCodeSearchResult } from '../../util/searchUtil'
@@ -18,31 +19,29 @@ const HsCodeResultList: React.FC<Props> = ({hsCodeData}: Props) => {
   return (
     <div>
         {primaryResult != null && (
-        <div className={styles.labeledGroup}>
-            <span className={styles.label}>Primary Match</span>
+        <Stack>
+            <Typography className={styles.label}>Primary Match</Typography>
             <HSCodeResult heading={primaryResult.htsno} description={primaryResult.description} suffix='' hsRates=''/>
-        </div>
+        </Stack>
         )}
         {otherResults.length > 0 && (
-          <div className={styles.labeledGroup}>
-            <span className={styles.label}>{primaryResult != null ? "Similar Results" : "Results"}</span>
-            {otherResults.map(result => (
-                <HSCodeResult heading={result.htsno} description={result.description} suffix='' hsRates=''/>
-            ))}
-          </div>
+          <Stack>
+            <Typography className={styles.label}>{primaryResult != null ? "Similar Results" : "Results"}</Typography>
+            <Stack>
+              {otherResults.map(result => (
+                  <HSCodeResult heading={result.htsno} description={result.description} suffix='' hsRates=''/>
+              ))}
+            </Stack>
+          </Stack>
         )}
     </div>
   )
 }
 
 const useStyles = createUseStyles({
-    labeledGroup: {
-      display: 'flex',
-      flexDirection: "column",
-    },
     label: {
       color: 'grey',
-      fontSize: '0.75em',
+      paddingTop: '0.5em',
     }
   })
 
