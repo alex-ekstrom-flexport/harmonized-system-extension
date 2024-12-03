@@ -46,11 +46,6 @@ const Sidepanel: React.FC = () => {
         setSearchData(result)
       }
     })()
-    // if (selectedText != null) {
-    //   chrome.runtime.sendMessage(
-    //     selectedText,
-    //     data => setSearchData(data)
-    // )
   }, [selectedText])
 
   return (
