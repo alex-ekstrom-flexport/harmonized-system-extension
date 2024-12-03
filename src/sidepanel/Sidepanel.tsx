@@ -76,6 +76,7 @@ const Sidepanel: React.FC = () => {
     return (
       <div className="Sidepanel">
         <Stack spacing={2}>
+          <p>{responseText}</p>
           <SearchBar searchTerm={selectedText ?? ''} onChange={setSelectedText} />
           <Stack direction="row" spacing={1}>
             <CountrySelectInput country={originCountry} countryType='Origin' onChange={setOriginCountry}/>
