@@ -1,3 +1,5 @@
+import {findCodeWithPrimaryMatch} from '../util/searchUtil'
+
 function setupContextMenu() {
   chrome.contextMenus.create({
     id: 'searchHSCodeInfo',

@@ -4,6 +4,7 @@
   "description": "Search and display HS Code information",
   "version": "1.0",
   "permissions": ["contextMenus", "storage", "sidePanel"],
+  "host_permissions": ["https://hts.usitc.gov/*"],
   "action": {
     "default_popup": "html/sidepanel.html",
     "default_icon": {
