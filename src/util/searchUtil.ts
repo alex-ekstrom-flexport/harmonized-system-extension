@@ -1,8 +1,10 @@
 import { searchByHsCode, type HsCodeData } from './fetchData'
 
+export type HsCodeSearchResult = Readonly<[HsCodeData | null, ReadonlyArray<HsCodeData>]>
+
 export const findCodeWithPrimaryMatch = async (
   term: string
-): Promise<Readonly<[HsCodeData | null, ReadonlyArray<HsCodeData>]>> => {
+): Promise<HsCodeSearchResult> => {
   const result = await searchByHsCode(term)
   const index = result.findIndex(
     (data) => data.htsno === term || data.htsno.replace(/./g, '') === term
