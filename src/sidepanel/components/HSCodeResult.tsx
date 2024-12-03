@@ -8,18 +8,18 @@ interface ResultProps {
   hsRates: string | number;
 }
 
-const Result:React.FC<ResultProps> = ({
+const HSCodeResult: React.FC<ResultProps> = ({
   heading,
   suffix,
   description,
   hsRates,
 }) => (
   <div className="result-card">
-    <div className="result-heading">Heading</div>
-    <div className="result-subheading">Suffix</div>
-    <div className="result-description">Description</div>
-    <div className="rate">HS rates</div>
+    <div className="result-heading">{heading}</div>
+    <div className="result-subheading">{suffix}</div>
+    <div className="result-description">{description}</div>
+    <div className="rate">{hsRates}</div>
   </div>
 )
 
-export default Result;
+export default HSCodeResult;
