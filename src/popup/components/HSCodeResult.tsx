@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/HSCodeResult.css";
+import "./HSCodeResult.css";
 
 interface ResultProps {
   heading: string;
@@ -8,7 +8,7 @@ interface ResultProps {
   hsRates: string | number;
 }
 
-const Result:React.FC<ResultProps> = ({
+const HSCodeResult:React.FC<ResultProps> = ({
   heading,
   suffix,
   description,
@@ -22,4 +22,4 @@ const Result:React.FC<ResultProps> = ({
   </div>
 )
 
-export default Result;
+export default HSCodeResult;
