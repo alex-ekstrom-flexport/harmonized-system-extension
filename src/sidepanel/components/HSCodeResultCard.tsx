@@ -45,7 +45,8 @@ const HSCodeResultCard: React.FC<ResultProps>  = ({
           margin: "0 auto",
         }}
       >
-        <Accordion sx={{ backgroundColor: "#F4F2EF" }}>
+        <Accordion sx={{ backgroundColor: "#F4F2EF" }}
+        >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon sx={{ color: "coral" }} />}
             aria-controls="panel-content"
@@ -66,6 +67,7 @@ const HSCodeResultCard: React.FC<ResultProps>  = ({
                 <Link
                   href={`https://hts.usitc.gov/search?query=${htsno}`}
                   underline="always"
+                  target="_blank"
                   variant="body1"
                   color="text.primary"
                   sx={{ fontWeight: "bold" }}
