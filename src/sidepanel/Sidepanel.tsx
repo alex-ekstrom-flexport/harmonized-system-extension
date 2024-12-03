@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { Stack } from '@mui/material'
 
 import SearchBar from '../sidepanel/components/SearchBar'
 import {
@@ -7,9 +8,12 @@ import {
   type HsCodeSearchResult,
 } from '../util/searchUtil'
 import HsCodeResultList from '../sidepanel/components/HsCodeResultList'
+import CountrySelectInput from './components/CountrySelectInput'
 
 const Sidepanel: React.FC = () => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
+  const [originCountry, setOriginCountry] = useState<string | null>('United Kingdom')
+  const [destinationCountry, setDestinationCountry] = useState<string | null>('United States')
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [responseText, setResponseText] = useState<string | null>(null)
   const [searchData, setSearchData] = React.useState<HsCodeSearchResult>([
@@ -53,7 +57,7 @@ const Sidepanel: React.FC = () => {
         chrome.storage.onChanged.removeListener(handleStorageChange)
       }
     })()
-  }, [selectedText])
+  }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -71,7 +75,13 @@ const Sidepanel: React.FC = () => {
   } else {
     return (
       <div className="Sidepanel">
-        <SearchBar searchTerm={selectedText ?? ''} onChange={setSelectedText} />
+        <Stack spacing={2}>
+          <SearchBar searchTerm={selectedText ?? ''} onChange={setSelectedText} />
+          <Stack direction="row" spacing={1}>
+            <CountrySelectInput country={originCountry} countryType='Origin' onChange={setOriginCountry}/>
+            <CountrySelectInput country={destinationCountry} countryType='Destination' onChange={setDestinationCountry}/>
+          </Stack>
+        </Stack>
         <HsCodeResultList hsCodeData={searchData} />
       </div>
     )
