@@ -11,7 +11,6 @@ type Props = Readonly<{
 
 const HsCodeResultList: React.FC<Props> = ({hsCodeData}: Props) => {
   const styles = useStyles()
-  console.log(hsCodeData)
 
   const primaryResult = hsCodeData[0]
   const otherResults = hsCodeData[1]

@@ -6,7 +6,6 @@ export const findCodeWithPrimaryMatch = async (
   term: string
 ): Promise<HsCodeSearchResult> => {
   const result = await searchByHsCode(term)
-  console.log(result)
   const index = result.findIndex(
     (data) => data.htsno === term || data.htsno.replace(/./g, '') === term
   )

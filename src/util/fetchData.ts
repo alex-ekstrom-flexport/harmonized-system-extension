@@ -19,6 +19,5 @@ export const searchByHsCode = async (
     method: 'GET',
     mode: 'cors',
   })
-  console.log(response)
   return await response.json()
 }
