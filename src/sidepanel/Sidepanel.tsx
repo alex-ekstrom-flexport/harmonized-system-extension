@@ -8,6 +8,7 @@ import {
   type HsCodeSearchResult,
 } from '../util/searchUtil'
 import HsCodeResultList from '../sidepanel/components/HsCodeResultList'
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CountrySelectInput from './components/CountrySelectInput'
 
 const Sidepanel: React.FC = () => {
@@ -20,6 +21,11 @@ const Sidepanel: React.FC = () => {
     null,
     [],
   ])
+
+  const theme = createTheme({
+    typography: {
+      fontFamily: "Helvetica Neue",}
+  });
 
   const sendMessage = async () => {
     try {
@@ -74,6 +80,7 @@ const Sidepanel: React.FC = () => {
     return <div>Loading...</div>
   } else {
     return (
+      <ThemeProvider theme={theme}>
       <div className="Sidepanel">
         <Stack spacing={2}>
           <p>{responseText}</p>
@@ -85,6 +92,7 @@ const Sidepanel: React.FC = () => {
         </Stack>
         <HsCodeResultList hsCodeData={searchData} />
       </div>
+        </ThemeProvider>
     )
   }
 }
