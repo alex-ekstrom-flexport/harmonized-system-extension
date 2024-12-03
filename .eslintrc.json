@@ -1,11 +1,20 @@
 {
-  "plugins": ["prettier", "react"],
+  "plugins": [
+    "prettier",
+    "react"
+  ],
   "parser": "babel-eslint",
   "rules": {
     "prettier/prettier": "error",
-    "no-console": [1]
+    "no-console": [
+      1
+    ]
   },
-  "extends": ["plugin:react/recommended"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:storybook/recommended",
+    "plugin:storybook/recommended"
+  ],
   "globals": {
     "document": true,
     "window": true,
