@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000 // Default to 3000 if PORT isn't set in .e
 
 // Function to strip non-number characters from text
 function stripNonNumberCharacters(text) {
-  return text.replace(/\D/g, '')
+  return text.replace(/\D/g, '').padEnd(10, '0')
 }
 
 app.post('/api/message', async (req, res) => {
@@ -55,8 +55,8 @@ app.post('/api/message', async (req, res) => {
 
 async function testFunction() {
   const { term, exportCountry, importCountry } = {
-    term: '2202100000',
-    exportCountry: 'China',
+    term: '9603.21',
+    exportCountry: 'Russia',
     importCountry: 'United Kingdom',
   }
   const cleanedText = stripNonNumberCharacters(term)
@@ -133,7 +133,8 @@ async function createCommodityCompletion(
                 type: 'string',
               },
               htsno: {
-                description: 'HS Code of the good that is being imported',
+                description:
+                  'HS Code of the good that is being imported. Please parse this like an HS code in the format of `####.##.##.##`. Omit any double zeros from the HS code.',
                 type: 'string',
               },
               general: {
