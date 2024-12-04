@@ -78,9 +78,7 @@ const HsCodeResultCard: React.FC<ResultProps> = ({
                 </IconButton>
               </Link>
             </Stack>
-            <Typography variant="subtitle1">
-              {description}
-            </Typography>
+            <Typography variant="subtitle1" dangerouslySetInnerHTML={{ __html: description}} />
           </Stack>
         </AccordionSummary>
         <AccordionDetails sx={{ padding: 0 }}>
