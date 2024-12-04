@@ -26,7 +26,7 @@ interface ResultProps {
   special: string
   other: string
 }
-const HsCodeResultCard: React.FC<ResultProps> = ({
+const HSCodeResultCard: React.FC<ResultProps> = ({
   htsno,
   description,
   general,
@@ -41,7 +41,6 @@ const HsCodeResultCard: React.FC<ResultProps> = ({
       sx={{
         width: "100%",
         borderRadius: 4,
-        p: 1,
         margin: "0 auto",
       }}
     >
@@ -136,4 +135,4 @@ const HsCodeResultCard: React.FC<ResultProps> = ({
   );
 };
 
-export default HsCodeResultCard;
+export default HSCodeResultCard;
