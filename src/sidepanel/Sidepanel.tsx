@@ -3,20 +3,23 @@ import axios from 'axios'
 import { Stack } from '@mui/material'
 
 import SearchBar from '../sidepanel/components/SearchBar'
+import LoadingSpinner from './components/LoadingSpinner'
 import {
   findCodeWithPrimaryMatch,
   type HsCodeSearchResult,
 } from '../util/searchUtil'
+import { searchUkCommodity } from '../util/fetchData'
 import HsCodeResultList from '../sidepanel/components/HsCodeResultList'
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CountrySelectInput from './components/CountrySelectInput'
 
 const Sidepanel: React.FC = () => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
-  const [originCountry, setOriginCountry] = useState<string | null>('United Kingdom')
-  const [destinationCountry, setDestinationCountry] = useState<string | null>('United States')
+  const [originCountry, setOriginCountry] = useState<string | null>('China')
+  const [destinationCountry, setDestinationCountry] = useState<string | null>(
+    'United States'
+  )
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [responseText, setResponseText] = useState<string | null>(null)
   const [searchData, setSearchData] = React.useState<HsCodeSearchResult>([
     null,
     [],
@@ -24,19 +27,20 @@ const Sidepanel: React.FC = () => {
 
   const theme = createTheme({
     typography: {
-      fontFamily: "Helvetica Neue",}
-  });
-
-  const sendMessage = async () => {
-    try {
-      const res = await axios.post('http://localhost:5000/api/message', {
-        text: selectedText,
-      })
-      setResponseText(res.data.response)
-    } catch (error) {
-      console.error('Error sending message:', error)
-    }
-  }
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+    },
+  })
 
   // Listen for changes to the selected text in storage
   const handleStorageChange = (changes: {
@@ -69,32 +73,51 @@ const Sidepanel: React.FC = () => {
     ;(async () => {
       if (selectedText != null) {
         setIsLoading(true)
-        const result = await findCodeWithPrimaryMatch(selectedText)
+        let result: HsCodeSearchResult = [null, []]
+        if (destinationCountry === 'United Kingdom') {
+          result = await searchUkCommodity(
+            selectedText,
+            originCountry,
+            destinationCountry
+          )
+        } else if (destinationCountry === 'United States') {
+          result = await findCodeWithPrimaryMatch(selectedText)
+        }
         setSearchData(result)
-        sendMessage()
-        setIsLoading(false) // Set loading to false after data is loaded
+        setIsLoading(false)
       }
     })()
-  }, [selectedText])
-  if (isLoading) {
-    return <div>Loading...</div>
-  } else {
-    return (
-      <ThemeProvider theme={theme}>
-      <div className="Sidepanel">
+  }, [selectedText, originCountry, destinationCountry])
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="Sidepanel" style={{ height: '98vh' }}>
         <Stack spacing={2}>
-          <p>{responseText}</p>
-          <SearchBar searchTerm={selectedText ?? ''} onChange={setSelectedText} />
+          <SearchBar
+            searchTerm={selectedText ?? ''}
+            onChange={setSelectedText}
+          />
           <Stack direction="row" spacing={1}>
-            <CountrySelectInput country={originCountry} countryType='Origin' onChange={setOriginCountry}/>
-            <CountrySelectInput country={destinationCountry} countryType='Destination' onChange={setDestinationCountry}/>
+            <CountrySelectInput
+              country={originCountry}
+              countryType="Origin"
+              onChange={setOriginCountry}
+            />
+            <CountrySelectInput
+              country={destinationCountry}
+              countryType="Destination"
+              onChange={setDestinationCountry}
+            />
           </Stack>
         </Stack>
-        <HsCodeResultList hsCodeData={searchData} />
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <HsCodeResultList hsCodeData={searchData} />
+        )}
       </div>
-        </ThemeProvider>
-    )
-  }
+    </ThemeProvider>
+  )
 }
 
 export default Sidepanel

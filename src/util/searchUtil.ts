@@ -1,6 +1,8 @@
 import { searchByHsCode, type HsCodeData } from './fetchData'
 
-export type HsCodeSearchResult = Readonly<[HsCodeData | null, ReadonlyArray<HsCodeData>]>
+export type HsCodeSearchResult = Readonly<
+  [HsCodeData | null, ReadonlyArray<HsCodeData>]
+>
 
 export const findCodeWithPrimaryMatch = async (
   term: string

@@ -1,10 +1,12 @@
 require('dotenv').config({ path: 'src/server/.env' })
 const express = require('express')
 const cors = require('cors')
+const axios = require('axios')
 const OpenAI = require('openai')
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
+const countryCodeLookup = require('country-code-lookup')
 
 const app = express()
 app.use(cors())
@@ -12,11 +14,89 @@ app.use(express.json())
 
 const PORT = process.env.PORT || 5000 // Default to 3000 if PORT isn't set in .env
 
-app.post('/api/message', async (req, res) => {
-  const { text } = req.body
-  const exportCountry = 'Russia'
-  const importCountry = 'United Kingdom'
+// Function to strip non-number characters from text
+function stripNonNumberCharacters(text) {
+  return text.replace(/\D/g, '').padEnd(10, '0')
+}
 
+app.post('/api/message', async (req, res) => {
+  const { term, exportCountry, importCountry } = req.body
+  const cleanedText = stripNonNumberCharacters(term)
+  console.log('Cleaned text:', cleanedText)
+  console.log('Export country:', exportCountry)
+  console.log('Import country:', importCountry)
+  let url =
+    'https://www.trade-tariff.service.gov.uk/commodities/' +
+    cleanedText +
+    '/?currency=EUR'
+  const exportCountryCode = countryCodeLookup.byCountry(exportCountry)?.iso2
+  if (exportCountryCode) {
+    url += '&country=' + exportCountryCode
+  }
+  try {
+    responseHTML = await axios.get(url)
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      console.error('Error 404: Resource not found')
+      res.status(404).json({ error: 'Resource not found' })
+    } else {
+      console.error('Error fetching HTML:', error)
+      res.status(500).json({ error: 'Failed to fetch HTML' })
+    }
+  }
+  const parsedJson = await createCommodityCompletion(
+    responseHTML.data,
+    exportCountry,
+    importCountry
+  )
+  console.log('Parsed JSON:', parsedJson)
+  res.status(200).json([parsedJson])
+})
+
+async function testFunction() {
+  const { term, exportCountry, importCountry } = {
+    term: '9603.21',
+    exportCountry: 'Russia',
+    importCountry: 'United Kingdom',
+  }
+  const cleanedText = stripNonNumberCharacters(term)
+  console.log('Cleaned text:', cleanedText)
+  console.log('Export country:', exportCountry)
+  console.log('Import country:', importCountry)
+  let url =
+    'https://www.trade-tariff.service.gov.uk/commodities/' +
+    cleanedText +
+    '/?currency=EUR'
+  const exportCountryCode = countryCodeLookup.byCountry(exportCountry)?.iso2
+  if (exportCountryCode) {
+    url += '&country=' + exportCountryCode
+  }
+  try {
+    responseHTML = await axios.get(url)
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      console.error('Error 404: Resource not found')
+      res.status(404).json({ error: 'Resource not found' })
+    } else {
+      console.error('Error fetching HTML:', error)
+      res.status(500).json({ error: 'Failed to fetch HTML' })
+    }
+  }
+  const parsedJson = await createCommodityCompletion(
+    responseHTML.data,
+    exportCountry,
+    importCountry
+  )
+  console.log('Parsed JSON:', parsedJson)
+  //res.status(200).json(parsedJson)
+}
+
+// Helper function to create OpenAI completion
+async function createCommodityCompletion(
+  responseData,
+  exportCountry,
+  importCountry
+) {
   try {
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -24,21 +104,18 @@ app.post('/api/message', async (req, res) => {
         {
           role: 'system',
           content:
-            'You are an expert customs broker in international freight forwarding. ' +
-            'You will be provided either an HS code or a description of the good to determine a report of the possible import controls, import duties, import VAT, and excise for every commodity containing this HS code or product descriptions in the HS code database for the given country. ' +
-            'Please provide a summary of the results in one sentence especially rate fields. ' +
-            "For example, search query  '9002' would return results for all commodities with the chapter '9002' at the start of its HS code. " +
-            "Additionally, search query 'books', would return every commodity with the word 'books' in its description" +
-            'provide the most up to date information as possible.',
+            'You are an expert customs broker' +
+            'You will be provided the html of a page detailing commodititys information. Your job is to determine a report of the possible import controls, import duties, import VAT, and excise for this HS code in the HS code database for the given country. ' +
+            'You are only allowed one sentence for each field. You need to be concise and accurate as possible. ',
         },
         {
           role: 'user',
           content:
-            'Provide a report for the good or HS code ' +
-            text +
-            ' when the export country is  ' +
+            'Provide a report for this page: ' +
+            responseData +
+            '. You will be importing from ' +
             exportCountry +
-            ' and the import country is ' +
+            ' to ' +
             importCountry +
             '.',
         },
@@ -51,68 +128,29 @@ app.post('/api/message', async (req, res) => {
           schema: {
             type: 'object',
             properties: {
-              goods_information: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    descriptionOfGood: {
-                      description: 'Description of good that is being imported',
-                      type: 'string',
-                    },
-                    hsCode: {
-                      description: 'HS Code of the good that is being imported',
-                      type: 'string',
-                    },
-                    importDuties: {
-                      description: 'Import Duty Rate for the good.',
-                      type: 'string',
-                    },
-                    exportCountry: {
-                      description: 'Country of export for import duty.',
-                      type: 'string',
-                    },
-                    importCountry: {
-                      description: 'Country of import for import duty.',
-                      type: 'string',
-                    },
-                    measureType: {
-                      description:
-                        'Any law that has an effect on the trade of goods.',
-                      type: 'string',
-                    },
-                    importVAT: {
-                      description: 'Import VAT Rate for the good.',
-                      type: 'string',
-                    },
-                    importControls: {
-                      description: 'Import Controls for the good.',
-                      type: 'string',
-                    },
-                    importExcise: {
-                      description: 'Import Excise for the good.',
-                      type: 'string',
-                    },
-                    importSuspensions: {
-                      description: 'Suspensions for the good',
-                      type: 'string',
-                    },
-                    linkToSource: {
-                      description:
-                        'Link to the page where I can find more information of the exact good. Please provide the link in the following format https://www.trade-tariff.service.gov.uk/commodities/{hs_code_here}',
-                      type: 'string',
-                    },
-                  },
-                },
-                additionalProperties: false,
-                required: [
-                  'descriptionOfGood',
-                  'hsCode',
-                  'importDuties',
-                  'exportCountry',
-                  'importCountry',
-                  'linkToSource',
-                ],
+              description: {
+                description: 'Description of good that is being imported',
+                type: 'string',
+              },
+              htsno: {
+                description:
+                  'HS Code of the good that is being imported. Please parse this like an HS code in the format of `####.##.##.##`. Omit any double zeros from the HS code.',
+                type: 'string',
+              },
+              general: {
+                description:
+                  'Import Duty for the good. Take the first one you see. Take the first one you see and should take the format of an exact percentage i.e. 10%. Put 0% if there are none. Do not include any words in this.',
+                type: 'string',
+              },
+              special: {
+                description:
+                  'This is any VAT or excise duty for the good. Take the first one you see. Take the first one you see and should take the format of an exact percentage i.e. 10%. Put 0% if there are none. Do not include any words in this.',
+                type: 'string',
+              },
+              other: {
+                description:
+                  'This is any Trade remedies, safeguards and retaliatory duties for the good if applicable for the export country. Take the first one you see and should take the format of an exact percentage i.e. 10%. Put 0% if there are none. Do not include any words in this.',
+                type: 'string',
               },
             },
           },
@@ -120,15 +158,27 @@ app.post('/api/message', async (req, res) => {
       },
     })
 
-    res.json({
-      response: completion.choices[0].message.content,
-    })
+    if (
+      completion &&
+      completion.choices &&
+      completion.choices[0] &&
+      completion.choices[0].message
+    ) {
+      console.log('Response:', completion.choices[0].message.content)
+      return {
+        data: completion.choices[0].message.content,
+      }
+    } else {
+      throw new Error('Invalid response from OpenAI')
+    }
   } catch (error) {
     console.error('Error creating completion:', error)
-    res.status(500).json({ error: 'Failed to create completion' })
+    throw new Error('Failed to create completion')
   }
-})
+}
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  // console.log('Testing function...')
+  // console.log('Response:', await testFunction())
   console.log(`Server running on port ${PORT}`)
 })
