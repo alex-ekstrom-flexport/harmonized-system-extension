@@ -2483,12 +2483,22 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+country-code-lookup@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/country-code-lookup/-/country-code-lookup-0.1.3.tgz#b59c0ea6f933ce262e9b051d1f9d34e1c7348d53"
+  integrity sha512-gLu+AQKHUnkSQNTxShKgi/4tYd0vEEait3JMrLNZgYlmIZ9DJLkHUjzXE9qcs7dy3xY/kUx2/nOxZ0Z3D9JE+A==
+
 country-list-js@^3.1.8:
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/country-list-js/-/country-list-js-3.1.8.tgz#a425eaf758af912b01485e32445069dc8da37e82"
   integrity sha512-IMlhr9dRoGNnNDR072teYBk7YztQ/rOTahJPTRF3vkxdyhxdbKEi7ZDBjHW0Yy3mKtxr5clbdCLsEaLlyZsAHg==
   dependencies:
     micro "^9.3.3"
+
+country-to-iso@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/country-to-iso/-/country-to-iso-1.5.1.tgz#36d0c00cb204145e1d494f4a7e53e4acc8414b07"
+  integrity sha512-ogDioDio2THiFVbhZWlj40vYaw9zND6BUksp7AGE8ttvoOxvQXkpzHfy+AvDJf2DZq2ERaK8bXcTXktM1GR+Aw==
 
 create-jest@^29.7.0:
   version "29.7.0"
