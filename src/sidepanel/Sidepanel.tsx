@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Stack } from '@mui/material'
 
 import SearchBar from '../sidepanel/components/SearchBar'
+import LoadingSpinner from './components/LoadingSpinner'
 import {
   findCodeWithPrimaryMatch,
   type HsCodeSearchResult,
@@ -14,14 +15,11 @@ import CountrySelectInput from './components/CountrySelectInput'
 
 const Sidepanel: React.FC = () => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
-  const [originCountry, setOriginCountry] = useState<string | null>(
-    'United Kingdom'
-  )
+  const [originCountry, setOriginCountry] = useState<string | null>('China')
   const [destinationCountry, setDestinationCountry] = useState<string | null>(
     'United States'
   )
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [responseText, setResponseText] = useState<string | null>(null)
   const [searchData, setSearchData] = React.useState<HsCodeSearchResult>([
     null,
     [],
@@ -29,7 +27,18 @@ const Sidepanel: React.FC = () => {
 
   const theme = createTheme({
     typography: {
-      fontFamily: 'Helvetica Neue',
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
     },
   })
 
@@ -63,6 +72,7 @@ const Sidepanel: React.FC = () => {
   useEffect(() => {
     ;(async () => {
       if (selectedText != null) {
+        setIsLoading(true)
         let result: HsCodeSearchResult = [null, []]
         if (destinationCountry === 'United Kingdom') {
           result = await searchUkCommodity(
@@ -78,36 +88,36 @@ const Sidepanel: React.FC = () => {
       }
     })()
   }, [selectedText, originCountry, destinationCountry])
-  if (isLoading) {
-    return <div>Loading...</div>
-  } else {
-    return (
-      <ThemeProvider theme={theme}>
-        <div className="Sidepanel">
-          <Stack spacing={2}>
-            <p>{responseText}</p>
-            <SearchBar
-              searchTerm={selectedText ?? ''}
-              onChange={setSelectedText}
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="Sidepanel" style={{ height: '98vh' }}>
+        <Stack spacing={2}>
+          <SearchBar
+            searchTerm={selectedText ?? ''}
+            onChange={setSelectedText}
+          />
+          <Stack direction="row" spacing={1}>
+            <CountrySelectInput
+              country={originCountry}
+              countryType="Origin"
+              onChange={setOriginCountry}
             />
-            <Stack direction="row" spacing={1}>
-              <CountrySelectInput
-                country={originCountry}
-                countryType="Origin"
-                onChange={setOriginCountry}
-              />
-              <CountrySelectInput
-                country={destinationCountry}
-                countryType="Destination"
-                onChange={setDestinationCountry}
-              />
-            </Stack>
+            <CountrySelectInput
+              country={destinationCountry}
+              countryType="Destination"
+              onChange={setDestinationCountry}
+            />
           </Stack>
+        </Stack>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
           <HsCodeResultList hsCodeData={searchData} />
-        </div>
-      </ThemeProvider>
-    )
-  }
+        )}
+      </div>
+    </ThemeProvider>
+  )
 }
 
 export default Sidepanel

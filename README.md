@@ -24,3 +24,10 @@ A Chrome extension for searching and displaying HS Code descriptions and rates.
 2. Click the "remove" button for the extension in [chrome://extensions/](chrome://extensions/)
 3. Click "Load Unpacked" in the top left
 4. Select the `dist` folder in this project
+
+## How to run the server
+
+1. Make an .env file in `/src/server` file
+2. Populate it with an OpenAI API key. Example: `OPENAI_API_KEY=your_api_key`
+3. Run `yarn server`
+4. To refresh changes, quit and rerun `yarn server`

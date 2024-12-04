@@ -22,6 +22,7 @@ const HsCodeResultList: React.FC<Props> = ({ hsCodeData }: Props) => {
         <Stack>
           <Typography className={styles.label}>Primary Match</Typography>
           <HSCodeResultCard
+            key={primaryResult.htsno}
             htsno={primaryResult.htsno}
             description={primaryResult.description}
             general={primaryResult.general}
@@ -38,6 +39,7 @@ const HsCodeResultList: React.FC<Props> = ({ hsCodeData }: Props) => {
           <Stack>
             {otherResults.map((result) => (
               <HSCodeResultCard
+                key={result.htsno}
                 htsno={result.htsno}
                 description={result.description}
                 general={result.general}

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Box,
   Stack,
@@ -8,16 +8,16 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+} from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
 
 interface ResultProps {
   htsno: string
@@ -31,35 +31,40 @@ const HSCodeResultCard: React.FC<ResultProps> = ({
   description,
   general,
   special,
-  other
+  other,
 }) => {
-
-  const headers = ["General", "Special", "Other"];
+  const headers = ['General', 'Special', 'Other']
 
   return (
     <Box
       sx={{
-        width: "100%",
+        width: '100%',
         borderRadius: 4,
-        margin: "0 auto",
+        p: 1,
+        margin: '0 auto',
       }}
     >
-      <Accordion sx={{ backgroundColor: "#F4F2EF" }}
-      >
+      <Accordion sx={{ backgroundColor: '#F4F2EF' }}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ color: "coral" }} />}
+          expandIcon={<ExpandMoreIcon sx={{ color: 'coral' }} />}
           aria-controls="panel-content"
           id="panel-header"
         >
-          <Stack direction="column" sx={{width: '100%'}}>
+          <Stack direction="column" sx={{ flexGrow: 1, width: '100%' }}>
             <Stack
               direction="row"
               alignItems="center"
-              justifyContent="center"
+              justifyContent="space-between"
+              sx={{ width: '100%', userSelect: 'text' }}
             >
               <Typography
                 variant="h5"
-                sx={{ color: "#24303E", fontFamily: "HELVETICA NEUE" }}
+                sx={{
+                  color: '#24303E',
+                  fontFamily: 'HELVETICA NEUE',
+                  flexGrow: 1,
+                  userSelect: 'text',
+                }}
               >
                 {htsno}
               </Typography>
@@ -69,23 +74,24 @@ const HSCodeResultCard: React.FC<ResultProps> = ({
                 target="_blank"
                 variant="body1"
                 color="text.primary"
-                sx={{ fontWeight: "bold" }}
-                justifyContent="right"
+                sx={{ fontWeight: 'bold', ml: 'auto', userSelect: 'text' }}
               >
                 <IconButton aria-label="info">
-                  <OpenInNewIcon sx={{ color: "#566AE5" }} />
+                  <OpenInNewIcon sx={{ color: '#566AE5' }} />
                 </IconButton>
               </Link>
             </Stack>
-            <Typography variant="subtitle1" dangerouslySetInnerHTML={{ __html: description}} />
+            <Typography variant="subtitle1" sx={{ fontStyle: 'italic' }}>
+              {description}
+            </Typography>
           </Stack>
         </AccordionSummary>
-        <AccordionDetails sx={{ padding: 0 }}>
+        <AccordionDetails sx={{ padding: 0, flexGrow: 1, width: '100%' }}>
           <TableContainer component={Paper}>
             <Table
               sx={{
-                "& .MuiTableCell-root": {
-                  padding: "4px",
+                '& .MuiTableCell-root': {
+                  padding: '4px',
                 },
               }}
             >
@@ -95,9 +101,9 @@ const HSCodeResultCard: React.FC<ResultProps> = ({
                     align="center"
                     colSpan={headers.length}
                     sx={{
-                      fontWeight: "bold",
-                      textAlign: "center",
-                      fontSize: "1.2em",
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      fontSize: '1.2em',
                     }}
                   >
                     Rates of Duty
@@ -110,7 +116,7 @@ const HSCodeResultCard: React.FC<ResultProps> = ({
                     <TableCell
                       key={index}
                       align="center"
-                      sx={{ textAlign: "center" }}
+                      sx={{ textAlign: 'center', width: '33.33%' }}
                     >
                       {header}
                     </TableCell>
@@ -121,8 +127,12 @@ const HSCodeResultCard: React.FC<ResultProps> = ({
               <TableBody>
                 <TableRow>
                   {[general, special, other].map((rate, index) => (
-                    <TableCell key={index} align="center">
-                      {rate === "" ? "--" : rate}
+                    <TableCell
+                      key={index}
+                      align="center"
+                      sx={{ textAlign: 'center', width: '33.33%' }}
+                    >
+                      {rate === '' ? '--' : rate}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -132,7 +142,7 @@ const HSCodeResultCard: React.FC<ResultProps> = ({
         </AccordionDetails>
       </Accordion>
     </Box>
-  );
-};
+  )
+}
 
-export default HSCodeResultCard;
+export default HSCodeResultCard
